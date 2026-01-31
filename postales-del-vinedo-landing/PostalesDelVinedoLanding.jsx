@@ -1,5 +1,119 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+
+// Fixed Navbar with scroll effect
+const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Close mobile menu on resize to desktop
+  useEffect(() => {
+    const onResize = () => { if (window.innerWidth > 768) setMobileOpen(false); };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
+  const navLinks = [
+    { label: 'Concepto', href: '#concepto' },
+    { label: 'Inversión', href: '#inversion' },
+    { label: 'Amenities', href: '#amenities' },
+    { label: 'Ubicación', href: '#ubicacion' },
+    { label: 'Roadmap', href: '#roadmap' },
+  ];
+
+  const handleLinkClick = useCallback(() => {
+    setMobileOpen(false);
+  }, []);
+
+  return (
+    <>
+      <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
+        <div className="navbar__inner">
+          <a href="#" className="navbar__logo">Postales del Viñedo</a>
+
+          {/* Desktop links */}
+          <div className="navbar__links">
+            {navLinks.map((link) => (
+              <a key={link.href} href={link.href} className="navbar__link">
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          <a href="#contacto" className="navbar__cta">Reservá tu lote</a>
+
+          {/* Hamburger */}
+          <button
+            className={`navbar__hamburger ${mobileOpen ? 'navbar__hamburger--open' : ''}`}
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label="Menú"
+          >
+            <span /><span /><span />
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile overlay */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            className="mobile-menu"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.25 }}
+          >
+            {navLinks.map((link) => (
+              <a key={link.href} href={link.href} className="mobile-menu__link" onClick={handleLinkClick}>
+                {link.label}
+              </a>
+            ))}
+            <a href="#contacto" className="mobile-menu__cta" onClick={handleLinkClick}>
+              Reservá tu lote
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+// Floating WhatsApp button
+const WhatsAppButton = () => {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 400);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <a
+      href="https://wa.me/5493434123456?text=Hola%2C%20quiero%20más%20información%20sobre%20Postales%20del%20Viñedo"
+      className={`whatsapp-fab ${visible ? 'whatsapp-fab--visible' : ''}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Contactar por WhatsApp"
+    >
+      <svg viewBox="0 0 32 32" width="28" height="28" fill="#fff">
+        <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16.004c0 3.5 1.132 6.742 3.052 9.376L1.056 31.2l6.06-1.94A15.91 15.91 0 0016.004 32C24.826 32 32 24.826 32 16.004S24.826 0 16.004 0zm9.31 22.606c-.39 1.1-1.932 2.014-3.164 2.28-.844.18-1.946.324-5.66-1.216-4.748-1.968-7.804-6.78-8.04-7.094-.226-.314-1.9-2.53-1.9-4.826s1.2-3.426 1.628-3.894c.39-.426.914-.604 1.206-.604.146 0 .278.008.396.014.428.018.642.042.924.716.354.842 1.216 2.96 1.322 3.176.108.216.216.508.068.802-.138.3-.258.486-.476.746-.216.26-.426.46-.642.74-.198.244-.42.504-.176.932.244.426 1.084 1.788 2.328 2.896 1.598 1.424 2.942 1.866 3.36 2.074.428.216.676.18.924-.108.254-.294 1.084-1.26 1.374-1.694.284-.428.574-.36.966-.216.396.144 2.506 1.182 2.934 1.398.428.216.714.324.82.504.108.182.108 1.044-.282 2.144z"/>
+      </svg>
+    </a>
+  );
+};
 
 // Hero Section with parallax
 const Hero = () => {
@@ -237,7 +351,7 @@ const Investment = () => {
   ];
 
   return (
-    <section className="investment-section">
+    <section id="inversion" className="investment-section">
       <div className="container">
         <motion.div
           ref={ref}
@@ -379,7 +493,7 @@ const Amenities = () => {
   ];
 
   return (
-    <section className="amenities-section">
+    <section id="amenities" className="amenities-section">
       <div className="container">
         <motion.div
           ref={ref}
@@ -418,7 +532,7 @@ const Location = () => {
   const isInView = useInView(ref, { once: true });
 
   return (
-    <section className="location-section">
+    <section id="ubicacion" className="location-section">
       <div className="container">
         <div className="location-content">
           <motion.div
@@ -496,15 +610,15 @@ const Timeline = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const phases = [
-    { quarter: "2025 Q1", title: "Preventa Pioneros", desc: "Descuentos exclusivos para primeros compradores" },
-    { quarter: "2025 Q2", title: "Inicio de Obras", desc: "Infraestructura y servicios básicos" },
-    { quarter: "2025 Q4", title: "Viñedos Plantados", desc: "Plantación de variedades seleccionadas" },
-    { quarter: "2026 Q2", title: "Amenities Operativos", desc: "Cabañas y glamping en funcionamiento" },
-    { quarter: "2027", title: "Primera Cosecha", desc: "Producción inicial de vino propio" }
+    { quarter: "2025", title: "Preventa Pioneros", desc: "Descuentos exclusivos para primeros compradores", done: true },
+    { quarter: "2026 Q1", title: "Inicio de Obras", desc: "Infraestructura y servicios básicos" },
+    { quarter: "2026 Q3", title: "Viñedos Plantados", desc: "Plantación de variedades seleccionadas" },
+    { quarter: "2027 Q1", title: "Amenities Operativos", desc: "Cabañas y glamping en funcionamiento" },
+    { quarter: "2028", title: "Primera Cosecha", desc: "Producción inicial de vino propio" }
   ];
 
   return (
-    <section className="timeline-section">
+    <section id="roadmap" className="timeline-section">
       <div className="container">
         <motion.div
           ref={ref}
@@ -524,14 +638,17 @@ const Timeline = () => {
           {phases.map((phase, index) => (
             <motion.div
               key={index}
-              className="timeline-item"
+              className={`timeline-item ${phase.done ? 'timeline-item--done' : ''}`}
               initial={{ opacity: 0, x: -30 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.15 }}
             >
               <div className="timeline-marker" />
               <div className="timeline-content">
-                <span className="timeline-quarter">{phase.quarter}</span>
+                <span className="timeline-quarter">
+                  {phase.quarter}
+                  {phase.done && <span className="timeline-done-badge">Completado</span>}
+                </span>
                 <h4 className="timeline-title">{phase.title}</h4>
                 <p className="timeline-desc">{phase.desc}</p>
               </div>
@@ -736,7 +853,7 @@ const Footer = () => {
 
           <div className="footer-contact">
             <h4 className="footer-title">Contacto</h4>
-            <a href="mailto:info@postalesdelvinnedo.com" className="footer-link">
+            <a href="mailto:info@postalesdelvinedo.com" className="footer-link">
               info@postalesdelvinedo.com
             </a>
             <a href="tel:+5493434123456" className="footer-link">
@@ -766,7 +883,7 @@ const Footer = () => {
 
         <div className="footer-bottom">
           <p className="footer-copyright">
-            © 2025 Postales del Viñedo. Todos los derechos reservados.
+            © 2026 Postales del Viñedo. Todos los derechos reservados.
           </p>
           <p className="footer-credit">
             La Paz, Entre Ríos, Argentina
@@ -803,9 +920,12 @@ const PostalesDelVinedoLanding = () => {
 
   return (
     <div className="app">
+      {/* Navbar */}
+      <Navbar />
+
       {/* Progress bar */}
       <div className="progress-bar" style={{ width: `${scrollProgress}%` }} />
-      
+
       {/* Main content */}
       <Hero />
       <Concept />
@@ -817,6 +937,9 @@ const PostalesDelVinedoLanding = () => {
       <Timeline />
       <Contact />
       <Footer />
+
+      {/* WhatsApp FAB */}
+      <WhatsAppButton />
     </div>
   );
 };
