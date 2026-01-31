@@ -102,7 +102,7 @@ const WhatsAppButton = () => {
 
   return (
     <a
-      href="https://wa.me/5493434123456?text=Hola%2C%20quiero%20más%20información%20sobre%20Postales%20del%20Viñedo"
+      href="https://wa.me/5493512440572?text=Hola%2C%20quiero%20más%20información%20sobre%20Postales%20del%20Viñedo"
       className={`whatsapp-fab ${visible ? 'whatsapp-fab--visible' : ''}`}
       target="_blank"
       rel="noopener noreferrer"
@@ -856,10 +856,10 @@ const Footer = () => {
             <a href="mailto:info@postalesdelvinedo.com" className="footer-link">
               info@postalesdelvinedo.com
             </a>
-            <a href="tel:+5493434123456" className="footer-link">
-              +54 9 343 4123456
+            <a href="https://wa.me/5493512440572" className="footer-link">
+              +54 9 351 2440572
             </a>
-            <a href="https://wa.me/5493434123456" className="footer-link" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/5493512440572" className="footer-link" target="_blank" rel="noopener noreferrer">
               WhatsApp
             </a>
           </div>
