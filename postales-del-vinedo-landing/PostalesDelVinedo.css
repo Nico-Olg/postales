@@ -1,25 +1,28 @@
 /* ============================================
    POSTALES DEL VIÑEDO - LANDING PAGE STYLES
-   Fondo ÚNICO global (verde -> vino claro)
+   Fondo ÚNICO global (verde -> vino)
    ============================================ */
 
 /* Import beautiful fonts */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* CSS Variables for theming */
+/* =========================================================
+   THEME
+   ========================================================= */
 :root {
-  /* Colors - Organic Wine Palette */
-  --primary: #2c5f2d;
-  --primary-dark: #1a3a1b;
-  --primary-light: #3d7a3e;
-  --secondary: #97bc62;
+  /* Colors - Organic Wine Palette (ajustadas para que el título oscuro se lea) */
+  --primary: #3f5f52;
+  --primary-dark: #2f463c;
+  --primary-light: #567a69;
+
+  --secondary: #c6d2b8;  /* verde suave / sage */
   --accent: #d4a373;
   --accent-dark: #b8895f;
-  --gold: #d4a373;
-  --earth: #8b7355;
-  --cream: #f5f1ed;
+
+  --cream: #f3f2ef;
   --white: #ffffff;
   --black: #1a1a1a;
+
   --gray-50: #fafaf9;
   --gray-100: #f5f5f4;
   --gray-200: #e7e5e4;
@@ -31,11 +34,12 @@
   --gray-800: #292524;
   --gray-900: #1c1917;
 
-  /* Fondo global (2 colores) */
-   --bg-green: #3f5f52;      /* verde viñedo elegante */
-  --bg-wine: #8b5a63;       /* vino claro sofisticado */
+  /* Fondo global */
+  --bg-green: #3f5f52;   /* verde viñedo elegante */
+  --bg-wine: #8b5a63;    /* vino claro sofisticado */
 
-    --panel-light: rgba(245,241,237,0.75);
+  /* Panels opcionales (NO se aplican a section-header por defecto) */
+  --panel-light: rgba(245,241,237,0.78);
   --panel-dark: rgba(20,20,20,0.22);
 
   /* Typography */
@@ -71,7 +75,9 @@
     0 12px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Reset */
+/* =========================================================
+   RESET / BASE
+   ========================================================= */
 * {
   margin: 0;
   padding: 0;
@@ -98,23 +104,34 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-   --blend-point: 20%;
 
-  /* Un solo gradiente para toda la landing */
- background: linear-gradient(
+  /* Blend point controlado por JS */
+  --blend-point: 20%;
+
+  background: linear-gradient(
     to bottom,
     var(--bg-green) 0%,
     var(--bg-green) var(--blend-point),
     var(--bg-wine) 100%
   );
 
-  /* Fija el fondo para que se sienta continuo */
   background-attachment: fixed;
 }
 
-/* (Opcional) sacá el overlay global si ensucia el gradiente */
-body::before {
-  display: none;
+/* opcional (desactivado) */
+body::before { display: none; }
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (min-width: 768px) {
+  .container { padding: 0 48px; }
 }
 
 /* =========================================================
@@ -127,15 +144,16 @@ body::before {
   right: 0;
   z-index: 1000;
   padding: 1rem 0;
-  transition: background var(--transition-base), padding var(--transition-base), box-shadow var(--transition-base);
+  transition: background var(--transition-base), padding var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 }
 
 .navbar--scrolled {
-  background: rgba(26, 58, 27, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(20, 24, 22, 0.60);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   padding: 0.6rem 0;
   box-shadow: 0 2px 24px rgba(0, 0, 0, 0.18);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
 }
 
 .navbar__inner {
@@ -343,36 +361,30 @@ body::before {
   box-shadow: 0 6px 24px rgba(37, 211, 102, 0.55);
 }
 
-/* Progress Bar */
+/* =========================================================
+   PROGRESS BAR
+   ========================================================= */
 .progress-bar {
   position: fixed;
   top: 0;
   left: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  background: linear-gradient(90deg, var(--primary), var(--accent));
   z-index: 9999;
   transition: width 0.1s ease;
 }
 
-/* Container */
-.container {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-@media (min-width: 768px) {
-  .container { padding: 0 48px; }
-}
-
-/* Typography */
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
 .section-title {
   font-family: var(--font-display);
   font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 700;
   line-height: 1.1;
-  color: var(--primary-dark);
+  color: rgba(0,0,0,0.55); /* por defecto */
   margin-bottom: 1rem;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.18); /* sutil */
 }
 
 .section-title.centered { text-align: center; }
@@ -380,7 +392,7 @@ body::before {
 .section-subtitle {
   font-family: var(--font-serif);
   font-size: clamp(1rem, 2vw, 1.25rem);
-  color: rgba(0,0,0,0.55);
+  color: rgba(0,0,0,0.38);
   max-width: 640px;
   line-height: 1.7;
 }
@@ -389,14 +401,22 @@ body::before {
   display: inline-block;
   font-family: var(--font-sans);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: var(--secondary);
+  color: rgba(255,255,255,0.55); /* para que se vea sobre el gradiente */
   margin-bottom: 1rem;
 }
 
-.section-header { margin-bottom: 4rem; }
+/* IMPORTANTE: header SIN panel (como tu primera imagen) */
+.section-header {
+  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
 
 .section-header.centered {
   text-align: center;
@@ -405,7 +425,51 @@ body::before {
   align-items: center;
 }
 
-/* Buttons */
+/* Ajustes específicos por sección para legibilidad (sin tarjeta) */
+.concept-section .section-title,
+.amenities-section .section-title,
+.location-section .section-title,
+.timeline-section .section-title,
+.investment-section .section-title,
+.gallery-section .section-title {
+  color: rgba(0,0,0,0.55);
+}
+
+.concept-section .section-subtitle,
+.amenities-section .section-subtitle,
+.location-section .section-subtitle,
+.timeline-section .section-subtitle,
+.investment-section .section-subtitle,
+.gallery-section .section-subtitle {
+  color: rgba(0,0,0,0.40);
+}
+
+.concept-section .eyebrow,
+.amenities-section .eyebrow,
+.location-section .eyebrow,
+.timeline-section .eyebrow,
+.investment-section .eyebrow,
+.gallery-section .eyebrow {
+  color: rgba(255,255,255,0.55);
+}
+
+/* =========================================================
+   OPTIONAL PANEL (si querés tarjetas “glass” en algún lugar)
+   Usalo agregando className="panel" donde corresponda.
+   ========================================================= */
+.panel {
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: var(--panel-light);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.35);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -445,7 +509,7 @@ body::before {
   transform: none;
 }
 
-/* Botón ripple suave */
+/* Ripple suave */
 .btn-primary::before {
   content: '';
   position: absolute;
@@ -465,8 +529,7 @@ body::before {
 }
 
 /* =========================================================
-   IMPORTANTE: TODAS LAS SECCIONES TRANSPARENTES
-   (así no pisan el gradiente global)
+   SECCIONES TRANSPARENTES (para no pisar el gradiente global)
    ========================================================= */
 .hero,
 .concept-section,
@@ -482,7 +545,6 @@ body::before {
   position: relative;
 }
 
-/* Aseguramos que NO existan overlays que “reinicien” el color */
 .concept-section::before,
 .gallery-section::before,
 .amenities-section::before,
@@ -493,7 +555,17 @@ body::before {
   content: none !important;
 }
 
-/* Hero Section */
+/* Micro separador elegante (opcional) */
+.section-divider {
+  height: 1px;
+  width: 100%;
+  margin: clamp(42px, 6vw, 72px) 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.20), transparent);
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
 .hero {
   height: 100vh;
   min-height: 700px;
@@ -510,7 +582,6 @@ body::before {
   will-change: transform;
 }
 
-/* OJO: el hero-image tiene su propia imagen + overlay, eso es correcto */
 .hero-image {
   width: 100%;
   height: 100%;
@@ -587,7 +658,9 @@ body::before {
   60% { transform: translateX(-50%) translateY(-5px); }
 }
 
-/* Sections padding */
+/* =========================================================
+   SECTIONS PADDING
+   ========================================================= */
 .concept-section,
 .gallery-section,
 .investment-section,
@@ -596,10 +669,12 @@ body::before {
 .location-section,
 .timeline-section,
 .contact-section {
-  padding: var(--section-padding) 0;
+  padding: clamp(84px, 9vw, 140px) 0;
 }
 
-/* Concept */
+/* =========================================================
+   CONCEPT
+   ========================================================= */
 .pillars-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -611,14 +686,14 @@ body::before {
   padding: 2.5rem;
   background: var(--cream);
   border-radius: 16px;
-  border: 1px solid transparent;
-  transition: transform var(--transition-base), box-shadow var(--transition-base), background var(--transition-base);
+  border: 1px solid rgba(20,20,20,0.06);
+  transition: transform var(--transition-base), box-shadow var(--transition-base), background var(--transition-base), border-color var(--transition-base);
   will-change: transform;
 }
 
 .pillar-card:hover {
   background: var(--white);
-  border-color: var(--secondary);
+  border-color: rgba(198, 210, 184, 0.9);
   box-shadow: var(--shadow-2xl);
   transform: translateY(-8px);
 }
@@ -639,7 +714,9 @@ body::before {
   line-height: 1.7;
 }
 
-/* Gallery */
+/* =========================================================
+   GALLERY
+   ========================================================= */
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -691,20 +768,22 @@ body::before {
   font-weight: 600;
 }
 
-/* Investment */
+/* =========================================================
+   INVESTMENT
+   ========================================================= */
 .investment-card {
   max-width: 800px;
   margin: 0 auto;
   padding: 3rem;
   background: linear-gradient(135deg, var(--cream) 0%, var(--white) 100%);
   border-radius: 20px;
-  border: 2px solid var(--secondary);
+  border: 2px solid rgba(198, 210, 184, 0.85);
   box-shadow: var(--shadow-xl);
   transition: box-shadow var(--transition-smooth);
 }
 
 .investment-card:hover {
-  box-shadow: var(--shadow-2xl), 0 0 40px rgba(151, 188, 98, 0.10);
+  box-shadow: var(--shadow-2xl), 0 0 40px rgba(198, 210, 184, 0.10);
 }
 
 .investment-header {
@@ -719,7 +798,7 @@ body::before {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--secondary);
+  color: rgba(0,0,0,0.45);
   margin-bottom: 0.5rem;
 }
 
@@ -768,7 +847,9 @@ body::before {
 
 .payment-option span { font-size: 0.875rem; color: var(--gray-600); }
 
-/* Scarcity (texto blanco sobre el gradiente) */
+/* =========================================================
+   SCARCITY
+   ========================================================= */
 .scarcity-section { color: var(--white); }
 
 .scarcity-banner {
@@ -833,7 +914,9 @@ body::before {
 .testimonial-author strong { color: var(--white); }
 .testimonial-author span { color: rgba(255, 255, 255, 0.65); font-size: 0.875rem; }
 
-/* Amenities */
+/* =========================================================
+   AMENITIES
+   ========================================================= */
 .amenities-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -845,6 +928,7 @@ body::before {
   padding: 2rem;
   background: var(--white);
   border-radius: 12px;
+  border: 1px solid rgba(20,20,20,0.06);
   transition: transform var(--transition-base), box-shadow var(--transition-base);
   will-change: transform;
 }
@@ -866,7 +950,9 @@ body::before {
 
 .amenity-desc { font-size: 0.938rem; color: var(--gray-600); }
 
-/* Location */
+/* =========================================================
+   LOCATION
+   ========================================================= */
 .location-content {
   display: grid;
   grid-template-columns: 1fr;
@@ -897,11 +983,11 @@ body::before {
   display: block;
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--primary-dark);
+  color: rgba(0,0,0,0.55);
   margin-bottom: 0.25rem;
 }
 
-.location-item span { font-size: 0.938rem; color: var(--gray-600); }
+.location-item span { font-size: 0.938rem; color: rgba(0,0,0,0.38); }
 
 .location-map {
   position: relative;
@@ -927,7 +1013,9 @@ body::before {
   border: 0;
 }
 
-/* Timeline */
+/* =========================================================
+   TIMELINE
+   ========================================================= */
 .timeline {
   position: relative;
   max-width: 800px;
@@ -980,6 +1068,7 @@ body::before {
   padding: 1.5rem;
   background: var(--white);
   border-radius: 12px;
+  border: 1px solid rgba(20,20,20,0.06);
   box-shadow: var(--shadow-md);
 }
 
@@ -1023,13 +1112,15 @@ body::before {
   vertical-align: middle;
 }
 
-/* Contact */
+/* =========================================================
+   CONTACT
+   ========================================================= */
 .contact-section { color: var(--white); }
 
 .contact-content { max-width: 700px; margin: 0 auto; }
 
 .contact-header { text-align: center; margin-bottom: 3rem; }
-.contact-header .section-title { color: var(--white); }
+.contact-header .section-title { color: var(--white); text-shadow: none; }
 
 .contact-subtitle {
   font-size: 1.125rem;
@@ -1085,7 +1176,7 @@ body::before {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--secondary);
-  box-shadow: 0 0 0 3px rgba(151, 188, 98, 0.2);
+  box-shadow: 0 0 0 3px rgba(198, 210, 184, 0.25);
 }
 
 .form-group textarea { resize: vertical; min-height: 120px; }
@@ -1110,7 +1201,9 @@ body::before {
 
 .trust-item svg { color: var(--accent); }
 
-/* Footer */
+/* =========================================================
+   FOOTER
+   ========================================================= */
 .footer {
   padding: 4rem 0 2rem;
   color: rgba(255, 255, 255, 0.85);
@@ -1178,7 +1271,9 @@ body::before {
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* Responsive adjustments */
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 @media (max-width: 767px) {
   :root { --section-padding: 80px; }
 
@@ -1199,74 +1294,10 @@ body::before {
   }
 }
 
-/* Print styles */
+/* Print */
 @media print {
   .progress-bar,
   .scroll-indicator,
   .btn-primary,
   .contact-form { display: none; }
 }
-.section-header { margin-bottom: clamp(2.5rem, 5vw, 4.5rem); }
-
-.concept-section,
-.gallery-section,
-.investment-section,
-.scarcity-section,
-.amenities-section,
-.location-section,
-.timeline-section,
-.contact-section {
-  padding: clamp(84px, 9vw, 140px) 0;
-}
-
-/* micro-separador elegante */
-.section-divider {
-  height: 1px;
-  width: 100%;
-  margin: clamp(42px, 6vw, 72px) 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.20), transparent);
-}
-:root{
-  --primary: #3f5f52;
-  --primary-dark: #2f463c;
-  --primary-light: #567a69;
-
-  --secondary: #c6d2b8;
-
-  --cream: #f3f2ef;
-}
-
-/* Headers legibles en todo el gradiente */
-.section-header{
-  padding: 18px 20px;
-  border-radius: 16px;
-  background: rgba(245,241,237,0.72);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.35);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-}
-
-.section-subtitle{ color: rgba(0,0,0,0.58); }
-
-/* Navbar premium */
-.navbar--scrolled{
-  background: rgba(20,24,22,0.60);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-}
-
-/* Progreso coherente con la nueva paleta */
-.progress-bar{
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-}
-
-/* Cards con borde sutil premium */
-.pillar-card,
-.amenity-card,
-.timeline-content{
-  border: 1px solid rgba(20,20,20,0.06);
-}
-
-
