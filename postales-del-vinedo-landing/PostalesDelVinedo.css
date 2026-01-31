@@ -32,8 +32,11 @@
   --gray-900: #1c1917;
 
   /* Fondo global (2 colores) */
-  --bg-green: #2c5f2d;    /* verde viñedo */
-  --bg-wine:  #9d7373;    /* vino clarito (ajustable) */
+   --bg-green: #3f5f52;      /* verde viñedo elegante */
+  --bg-wine: #8b5a63;       /* vino claro sofisticado */
+
+    --panel-light: rgba(245,241,237,0.75);
+  --panel-dark: rgba(20,20,20,0.22);
 
   /* Typography */
   --font-display: 'Playfair Display', serif;
@@ -95,12 +98,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+   --blend-point: 20%;
 
   /* Un solo gradiente para toda la landing */
-  background: linear-gradient(
+ background: linear-gradient(
     to bottom,
     var(--bg-green) 0%,
-    var(--bg-green) 20%,
+    var(--bg-green) var(--blend-point),
     var(--bg-wine) 100%
   );
 
@@ -1202,3 +1206,67 @@ body::before {
   .btn-primary,
   .contact-form { display: none; }
 }
+.section-header { margin-bottom: clamp(2.5rem, 5vw, 4.5rem); }
+
+.concept-section,
+.gallery-section,
+.investment-section,
+.scarcity-section,
+.amenities-section,
+.location-section,
+.timeline-section,
+.contact-section {
+  padding: clamp(84px, 9vw, 140px) 0;
+}
+
+/* micro-separador elegante */
+.section-divider {
+  height: 1px;
+  width: 100%;
+  margin: clamp(42px, 6vw, 72px) 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.20), transparent);
+}
+:root{
+  --primary: #3f5f52;
+  --primary-dark: #2f463c;
+  --primary-light: #567a69;
+
+  --secondary: #c6d2b8;
+
+  --cream: #f3f2ef;
+}
+
+/* Headers legibles en todo el gradiente */
+.section-header{
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: rgba(245,241,237,0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.35);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+.section-subtitle{ color: rgba(0,0,0,0.58); }
+
+/* Navbar premium */
+.navbar--scrolled{
+  background: rgba(20,24,22,0.60);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+/* Progreso coherente con la nueva paleta */
+.progress-bar{
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+/* Cards con borde sutil premium */
+.pillar-card,
+.amenity-card,
+.timeline-content{
+  border: 1px solid rgba(20,20,20,0.06);
+}
+
+
