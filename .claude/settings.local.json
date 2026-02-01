@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:entrecielos.com)",
+      "WebFetch(domain:tupungatovalley.com)"
+    ]
+  }
+}
