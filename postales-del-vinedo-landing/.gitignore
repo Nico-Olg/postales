@@ -37,3 +37,4 @@ Thumbs.db
 # ============================
 .eslintcache
 .vercel
+.env*.local
