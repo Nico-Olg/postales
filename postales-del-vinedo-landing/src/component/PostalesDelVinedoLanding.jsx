@@ -122,10 +122,11 @@ const WhatsAppButton = () => {
   );
 };
 
-// Hero slider images
-const heroImages = [
+// Fallback local images (used if Google Drive API fails)
+const fallbackImages = [
   '/images/bodega.png',
   '/images/bodega-madera.png',
+  '/images/cabernet-sauvignon.png',
   '/images/glamping.png',
   '/images/glamping-exclusivo.png',
   '/images/maquina-arado.png',
@@ -133,17 +134,35 @@ const heroImages = [
   '/images/postales-aerea.png',
   '/images/tronco-sarmiento.png',
   '/images/uva.png',
+  '/images/mujer-entre-vinedos.png',
   '/images/vineyard-sunset.png',
   '/images/vinedo-atardecer.png',
   '/images/vinedos.png',
   '/images/viogner.png',
 ];
 
+// Google Apps Script URL for fetching images from Drive
+const DRIVE_IMAGES_API = 'https://script.google.com/macros/s/AKfycbzAO7rY0-3wdkaHhgXcLdYaVYjnHtmzN5PloST-wFprE3oMkI1RKI0OIurxHehZsvyt1w/exec';
+
+// Preload images utility
+const preloadImages = (urls) => {
+  return Promise.all(
+    urls.map(url => new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(url);
+      img.onerror = () => resolve(null); // Skip failed images
+      img.src = url;
+    }))
+  ).then(results => results.filter(url => url !== null));
+};
+
 // Hero Section with parallax and image slider
 const Hero = () => {
   const { t } = useTranslation();
   const ref = useRef(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [images, setImages] = useState(fallbackImages);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -153,13 +172,40 @@ const Hero = () => {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
+  // Fetch and preload images from Google Drive on mount
+  useEffect(() => {
+    const fetchDriveImages = async () => {
+      try {
+        const response = await fetch(DRIVE_IMAGES_API);
+        const data = await response.json();
+        if (data.images && data.images.length > 0) {
+          const driveUrls = data.images.map(img => img.url);
+          // Preload all images before using them
+          const loadedUrls = await preloadImages(driveUrls);
+          if (loadedUrls.length > 0) {
+            setImages(loadedUrls);
+          }
+        }
+      } catch (error) {
+        console.log('Using fallback images:', error);
+      }
+      setImagesLoaded(true);
+    };
+
+    // Also preload fallback images
+    preloadImages(fallbackImages).then(() => {
+      fetchDriveImages();
+    });
+  }, []);
+
   // Auto-advance slides
   useEffect(() => {
+    if (images.length === 0) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+      setCurrentSlide((prev) => (prev + 1) % images.length);
     }, 5000); // 5 seconds per slide
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   return (
     <section ref={ref} className="hero">
@@ -172,7 +218,7 @@ const Hero = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
-            style={{ backgroundImage: `url(${heroImages[currentSlide]})` }}
+            style={{ backgroundImage: `url(${images[currentSlide]})` }}
           />
         </AnimatePresence>
       </motion.div>
